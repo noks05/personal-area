@@ -1,11 +1,20 @@
 <script setup>
 import SideBar from "./SideBar.vue";
-import UserPreview from "./UserPreview.vue";
 </script>
 
 <template>
   <div class="left">
-    <UserPreview />
+    <div class="flex flex-col items-center mb-14">
+      <UAvatar
+        class="block mb-3"
+        size="5xl"
+        src="https://avatars.githubusercontent.com/u/739984?v=4"
+        alt="Avatar"
+      />
+      <span class="font-medium text-lg text-slate-800"
+        >Alexander Lermontov</span
+      >
+    </div>
     <SideBar />
   </div>
 </template>

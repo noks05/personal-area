@@ -1,29 +1,61 @@
-<script setup></script>
+<script setup>
+const links = [
+  {
+    label: "Profile",
+    icon: "i-heroicons-face-smile",
+  },
+];
+
+const items = [
+  [
+    {
+      label: "Profile",
+      icon: "i-heroicons-face-smile",
+      to: "/profile",
+    },
+    {
+      label: "Tickets",
+      icon: "i-heroicons-ticket",
+      to: "/tickets",
+    },
+    {
+      label: "Sign out",
+      icon: "i-heroicons-arrow-left-on-rectangle",
+      to: "/sign-in",
+    },
+  ],
+];
+</script>
 
 <template>
-  <div class="top-bar">
-    <h5 class="name-page">Profile</h5>
-    <div class="dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle user-img"
-        type="button"
-        id="dropdownMenuButton1"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        <img
-          src="https://st3.depositphotos.com/12039478/18474/i/450/depositphotos_184748886-stock-photo-happy-young-businesswoman-relaxing-workplace.jpg"
-          alt="user photo"
-          height="40"
-          width="40"
+  <div class="top-bar bg-gray-100 rounded-md">
+    <UBreadcrumb :links="links" />
+
+    <UDropdown
+      :items="items"
+      :ui="{ item: { disabled: 'cursor-text select-text' } }"
+      :popper="{ placement: 'bottom-start' }"
+    >
+      <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" />
+
+      <template #account="{ item }">
+        <div class="text-left">
+          <p>Signed in as</p>
+          <p class="truncate font-medium text-gray-900 dark:text-white">
+            {{ item.label }}
+          </p>
+        </div>
+      </template>
+
+      <template #item="{ item }">
+        <span class="truncate">{{ item.label }}</span>
+
+        <UIcon
+          :name="item.icon"
+          class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
         />
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item" href="#">Profile</a></li>
-        <li><a class="dropdown-item" href="#">Tickets</a></li>
-        <li><a class="dropdown-item" href="#">Sign out</a></li>
-      </ul>
-    </div>
+      </template>
+    </UDropdown>
   </div>
 </template>
 
@@ -35,19 +67,5 @@
   width: 100%;
   margin-bottom: 50px;
   padding: 10px 20px;
-  background: #f0f1f4;
-}
-.user-img {
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  overflow: hidden;
-}
-.user-img > img {
-  height: 100%;
-  width: 100%;
-  border-radius: 100%;
-  object-fit: cover;
 }
 </style>
