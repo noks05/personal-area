@@ -12,7 +12,7 @@ import SideBar from "./SideBar.vue";
         alt="Avatar"
       />
       <span class="font-medium text-lg text-slate-800"
-        >Alexander Lermontov</span
+        >Александр Лермонтов</span
       >
     </div>
     <SideBar />

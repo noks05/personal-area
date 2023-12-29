@@ -25,6 +25,7 @@ export default defineAppConfig({
         select: {
             rounded: 'border rounded',
             default: {
+
                 variant: "none",
             },
         },

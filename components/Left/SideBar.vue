@@ -1,12 +1,12 @@
 <script setup>
 const links = [
   {
-    label: "Profile",
+    label: "Профиль",
     icon: "i-heroicons-face-smile",
     to: "/profile",
   },
   {
-    label: "Tickets",
+    label: "Тикеты",
     icon: "i-heroicons-ticket",
     to: "/tickets",
   },

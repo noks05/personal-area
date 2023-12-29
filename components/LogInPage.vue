@@ -1,22 +1,33 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from "#ui/types";
 
+const form = ref();
+const authStore = useAuthStore();
 const passwordInputType = ref<string>("password");
 
 const state = reactive({
-  login: undefined,
-  password: undefined,
+  login: "",
+  password: "",
 });
 
 const validate = (state: any): FormError[] => {
   const errors = [];
-  if (!state.login) errors.push({ path: "login", message: "Required" });
-  if (!state.password) errors.push({ path: "password", message: "Required" });
+  if (!state.login.trim())
+    errors.push({ path: "login", message: "Поле не должно быть пустым" });
+  if (!state.password.trim())
+    errors.push({ path: "password", message: "Поле не должно быть пустым" });
   return errors;
 };
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  console.log(event.data);
+  const { login, password } = event.data;
+  await authStore.checkAuth(login, password);
+
+  if (!authStore.auth) {
+    form.value.setErrors([
+      { path: "password", message: "Неправильный логин или пароль" },
+    ]);
+  }
 }
 function showPassword() {
   const typeInput = passwordInputType.value;
@@ -31,16 +42,17 @@ function showPassword() {
   <div class="wrapper bg-gray-100">
     <UContainer class="max-w-96 w-full p-5 border rounded-md bg-white">
       <UForm
+        ref="form"
         class="space-y-4"
         :validate="validate"
         :state="state"
         @submit="onSubmit"
       >
-        <UFormGroup label="Login" name="login">
+        <UFormGroup label="Логин" name="login">
           <UInput v-model="state.login" />
         </UFormGroup>
 
-        <UFormGroup label="Password" name="password">
+        <UFormGroup label="Пароль" name="password">
           <UInput
             v-model="state.password"
             v-bind:type="passwordInputType"
@@ -51,14 +63,12 @@ function showPassword() {
                 v-show="passwordInputType === 'password'"
                 variant="link"
                 icon="i-heroicons-eye"
-                color="#374151"
                 @click="showPassword"
               />
               <UButton
                 v-show="passwordInputType === 'text'"
                 variant="link"
                 icon="i-heroicons-eye-slash"
-                color="#374151"
                 @click="showPassword"
               />
             </template>

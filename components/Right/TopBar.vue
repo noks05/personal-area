@@ -1,27 +1,48 @@
 <script setup>
+const authData = useAuthStore();
+
+const route = useRoute();
+
+function getNamePage() {
+  const path = route.path;
+  if (path === "/profile")
+    return { img: "i-heroicons-face-smile", text: "Профиль" };
+  else if (path === "/" || path === "/tickets")
+    return { img: "i-heroicons-ticket", text: "Тикеты" };
+  return "";
+}
+
 const links = [
   {
-    label: "Profile",
-    icon: "i-heroicons-face-smile",
+    label: getNamePage().text,
+    icon: getNamePage().img,
   },
 ];
 
 const items = [
   [
     {
-      label: "Profile",
+      label: "admin@example.com",
+      slot: "account",
+      disabled: true,
+    },
+  ],
+  [
+    {
+      label: "Профиль",
       icon: "i-heroicons-face-smile",
       to: "/profile",
     },
     {
-      label: "Tickets",
+      label: "Тикеты",
       icon: "i-heroicons-ticket",
       to: "/tickets",
     },
     {
-      label: "Sign out",
+      label: "Выйти",
       icon: "i-heroicons-arrow-left-on-rectangle",
-      to: "/sign-in",
+      to: "/login",
+      click: () => authData.setAuthState(false),
     },
   ],
 ];
@@ -40,7 +61,6 @@ const items = [
 
       <template #account="{ item }">
         <div class="text-left">
-          <p>Signed in as</p>
           <p class="truncate font-medium text-gray-900 dark:text-white">
             {{ item.label }}
           </p>
