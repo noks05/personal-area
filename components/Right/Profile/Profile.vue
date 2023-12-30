@@ -1,31 +1,56 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 import type { FormError, FormSubmitEvent } from "#ui/types";
+import { useUserDataStore } from "~/stores/useUserDataStore";
+import "@vuepic/vue-datepicker/dist/main.css";
 
-const photo = ref("");
-const photoUser = reactive({ photo });
-function handlerChange(event: any) {
-  photoUser.photo = URL.createObjectURL(event.target.files[0]);
-}
+const userData = useUserDataStore();
+
+// const photo = ref("");
+// const photoUser = reactive({ photo });
+// photoUser.photo = userData.img;
+
 const countries = [
-  "Москва",
-  "Новосибирск",
-  "Пенза",
-  "Волгоград",
-  "Калининград",
+  {
+    name: "Москва",
+    value: "MS",
+  },
+  {
+    name: "Новосибирск",
+    value: "NB",
+  },
+  {
+    name: "Волгоград",
+    value: "VR",
+  },
+  {
+    name: "Калининград",
+    value: "KR",
+  },
+  {
+    name: "Пенза",
+    value: "PZ",
+  },
 ];
-const country = ref(countries[0]);
-const date = ref();
+function getFindObj(str: string, key: string) {
+  return countries.find(
+    (obj: any) => String(obj[key]).toLowerCase() === String(str).toLowerCase()
+  );
+}
+const findCountry = getFindObj(userData.country, "name")?.value;
+const country = ref(findCountry || countries[0].name);
 
 const state = reactive({
-  file: undefined,
-  name: undefined,
-  lastName: undefined,
+  img: userData.img,
+  name: userData.fullName.split(" ")[0],
+  lastName: userData.fullName.split(" ")[1],
   country: country,
-  date: date,
+  date: userData.date,
 });
+function handlerChange(event: any) {
+  state.img = URL.createObjectURL(event.target.files[0]);
+}
 
 const validate = (state: any): FormError[] => {
   const errors = [];
@@ -36,7 +61,13 @@ const validate = (state: any): FormError[] => {
 };
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  console.log(event.data);
+  const dataForm = {
+    img: event.data.img,
+    fullName: event.data.name + " " + event.data.lastName,
+    country: getFindObj(event.data.country, "value")?.name,
+    date: String(event.data.date),
+  };
+  userData.setUserData(dataForm);
 }
 </script>
 
@@ -50,14 +81,14 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     <UFormGroup label="File" name="file">
       <label class="wrap-user-photo">
         <UAvatar
-          v-bind:src="photoUser.photo"
+          v-bind:src="state.img"
           alt="Avatar"
           :ui="{
             strategy: 'override',
             rounded: 'rounded-md',
           }"
           size="6xl"
-          v-if="photoUser.photo.length"
+          v-if="state.img.length"
         />
         <UIcon
           name="i-lets-icons-user-scan-light"
@@ -67,7 +98,6 @@ async function onSubmit(event: FormSubmitEvent<any>) {
         />
 
         <UInput
-          v-model="state.file"
           accept="image/*"
           class="hidden"
           type="file"
@@ -85,7 +115,11 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     </UFormGroup>
 
     <UFormGroup label="Country" name="country">
-      <USelect v-model="state.country" :options="countries" />
+      <USelect
+        v-model="state.country"
+        :options="countries"
+        option-attribute="name"
+      />
     </UFormGroup>
 
     <UFormGroup label="Date" name="date">

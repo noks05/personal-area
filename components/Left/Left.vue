@@ -1,5 +1,6 @@
 <script setup>
 import SideBar from "./SideBar.vue";
+const userData = useUserDataStore();
 </script>
 
 <template>
@@ -8,12 +9,18 @@ import SideBar from "./SideBar.vue";
       <UAvatar
         class="block mb-3"
         size="5xl"
-        src="https://avatars.githubusercontent.com/u/739984?v=4"
+        v-bind:src="userData.img"
         alt="Avatar"
       />
-      <span class="font-medium text-lg text-slate-800"
-        >Александр Лермонтов</span
-      >
+      <span class="font-medium text-lg text-slate-800">
+        {{ userData.fullName }}
+      </span>
+      <span class="font-medium text-xs text-slate-500">
+        Дата рождения : {{ new Date(userData.date).toDateString() }}
+      </span>
+      <span class="font-medium text-xs text-slate-500">
+        Город : {{ userData.country }}
+      </span>
     </div>
     <SideBar />
   </div>

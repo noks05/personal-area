@@ -1,11 +1,12 @@
 
-import { getData } from 'nuxt-storage/local-storage'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path !== '/login') {
-    const resp = getData("authPersonalAreaTest777")
-    if (!resp) {
-      return await navigateTo('/login')
+    if (process.client) {
+      const resp = JSON.parse(localStorage.getItem("authPersonalAreaTest777"))
+      if (!resp.value) {
+        return await navigateTo('/login')
+      }
     }
   }
 })

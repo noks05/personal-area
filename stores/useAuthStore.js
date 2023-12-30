@@ -1,4 +1,3 @@
-
 import { getData, setData } from 'nuxt-storage/local-storage'
 
 export const useAuthStore = defineStore('authData', {
