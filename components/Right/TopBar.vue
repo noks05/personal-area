@@ -6,18 +6,23 @@ const route = useRoute();
 function getNamePage() {
   const path = route.path;
   if (path === "/profile")
-    return { img: "i-heroicons-face-smile", text: "Профиль" };
+    return [
+      { icon: "i-heroicons-face-smile", label: "Профиль", to: "/profile" },
+    ];
+  else if (path === `/tickets/${route.params.id}`)
+    return [
+      { icon: "i-heroicons-ticket", label: "Тикеты", to: "/tickets" },
+      {
+        label: "Подробнее",
+        icon: "i-heroicons-information-circle",
+      },
+    ];
   else if (path === "/" || path === "/tickets")
-    return { img: "i-heroicons-ticket", text: "Тикеты" };
+    return [{ icon: "i-heroicons-ticket", label: "Тикеты", to: "/tickets" }];
   return "";
 }
 
-const links = [
-  {
-    label: getNamePage().text,
-    icon: getNamePage().img,
-  },
-];
+const links = [...getNamePage()];
 
 const items = [
   [
