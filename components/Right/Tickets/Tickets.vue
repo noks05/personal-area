@@ -32,15 +32,25 @@ const columns = [
     label: "more",
   },
 ];
+function randomDate(start, end) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
 function getArr() {
-  return Array.from(data).map(obj => ({
-    ...obj,
-    date: String(new Date(obj.date)).split(" ").slice(0, 4).join(" "),
+  return Array.from(data).map((obj, index) => ({
+    author: obj.name,
+    id: obj.id,
+    title: obj.username,
+    message: obj.company.catchPhrase,
+    more: "more",
+    date: String(randomDate(new Date("2023", "02", index), new Date())).split(
+      "G"
+    )[0],
   }));
 }
 const data = await getTicketsData();
 const people = [
-  ...getArr(),
   ...getArr(),
   {
     author: "Tompsun Rise",

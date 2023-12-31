@@ -1,11 +1,10 @@
-import { getData, setData } from 'nuxt-storage/local-storage'
+import { setData } from 'nuxt-storage/local-storage'
 
 export const useAuthStore = defineStore('authData', {
   state: () => (
     {
       login: 'admin',
       password: 'admin',
-      auth: getData('authPersonalAreaTest777') || false,
     }
   ),
   actions: {
@@ -25,7 +24,6 @@ export const useAuthStore = defineStore('authData', {
       }
     },
     setAuthState(value) {
-      this.auth = value
       setData('authPersonalAreaTest777', value)
     },
   },
