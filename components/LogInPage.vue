@@ -18,16 +18,14 @@ const validate = (state: any): FormError[] => {
     errors.push({ path: "password", message: "Поле не должно быть пустым" });
   return errors;
 };
-
+function setError() {
+  form.value.setErrors([
+    { path: "password", message: "Неправильный логин или пароль" },
+  ]);
+}
 async function onSubmit(event: FormSubmitEvent<any>) {
   const { login, password } = event.data;
-  await authStore.checkAuth(login, password);
-
-  if (!authStore.auth) {
-    form.value.setErrors([
-      { path: "password", message: "Неправильный логин или пароль" },
-    ]);
-  }
+  await authStore.checkAuth(login, password, setError);
 }
 function showPassword() {
   const typeInput = passwordInputType.value;

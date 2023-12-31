@@ -1,5 +1,6 @@
 <script setup>
 import { getTicketsData } from "../../../fetching/getTicketsData";
+import { createRandomDate } from "~/utils/createRandomDate";
 
 const columns = [
   {
@@ -29,14 +30,9 @@ const columns = [
 
   {
     key: "more",
-    label: "more",
   },
 ];
-function randomDate(start, end) {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
-}
+
 function getArr() {
   return Array.from(data).map((obj, index) => ({
     author: obj.name,
@@ -44,23 +40,13 @@ function getArr() {
     title: obj.username,
     message: obj.company.catchPhrase,
     more: "more",
-    date: String(randomDate(new Date("2023", "02", index), new Date())).split(
-      "G"
-    )[0],
+    date: String(
+      createRandomDate(new Date("2023", "02", index), new Date())
+    ).split("G")[0],
   }));
 }
 const data = await getTicketsData();
-const people = [
-  ...getArr(),
-  {
-    author: "Tompsun Rise",
-    id: 2,
-    title: "Problem12324",
-    message: "Taxi park worked to just nick even Santa...",
-    date: "2021-01-27T18:47:13-05:00",
-    more: "more",
-  },
-];
+const people = [...getArr()];
 
 // фильтр - селектор
 const selectedColumns = ref([...columns]);
@@ -88,6 +74,11 @@ const filteredRows = computed(() => {
     });
   });
 });
+
+async function goToMorePage(event) {
+  const path = String(event.target.closest("tr").children[0].textContent);
+  await navigateTo("/tickets/" + path);
+}
 </script>
 
 <template>
@@ -120,7 +111,13 @@ const filteredRows = computed(() => {
         icon: 'i-heroicons-arrow-path-20-solid',
         label: 'Loading...',
       }"
-    />
+    >
+      <template #more-data="">
+        <UButton color="gray" variant="solid" @click="goToMorePage"
+          >Подробнее</UButton
+        >
+      </template>
+    </UTable>
 
     <div
       class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
